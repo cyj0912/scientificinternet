@@ -33,7 +33,7 @@ tee /etc/trojan/config.json <<EOF
     "password": [
         "${UUID}"
     ],
-    "log_level": 0,
+    "log_level": 5,
     "ssl": {
         "cert": "/etc/trojan/fullchain.pem",
         "key": "/etc/trojan/privkey.pem"
