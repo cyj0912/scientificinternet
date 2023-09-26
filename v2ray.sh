@@ -142,3 +142,9 @@ EOF
 
 systemctl enable v2ray.service
 systemctl start v2ray.service
+
+echo [+] Preparing for VPN
+apt-get install curl jq openresolv wireguard
+curl -o mullvad-wg.sh https://raw.githubusercontent.com/mullvad/mullvad-wg.sh/main/mullvad-wg.sh
+chmod +x ./mullvad-wg.sh
+echo Run ./mullvad-wg.sh to setup VPN
