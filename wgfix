@@ -1,0 +1,24 @@
+#!/bin/bash
+TestIPv4_1='1.0.0.1'
+TestIPv4_2='9.9.9.9'
+TestIPv6_1='2606:4700:4700::1001'
+TestIPv6_2='2620:fe::fe'
+
+IPv4_addr=$(
+  ip route get ${TestIPv4_1} 2>/dev/null | grep -oP 'src \K\S+' ||
+  ip route get ${TestIPv4_2} 2>/dev/null | grep -oP 'src \K\S+'
+)
+
+IPv6_addr=$(
+  ip route get ${TestIPv6_1} 2>/dev/null | grep -oP 'src \K\S+' ||
+  ip route get ${TestIPv6_2} 2>/dev/null | grep -oP 'src \K\S+'
+)
+
+﻿﻿﻿﻿﻿for file in /etc/wireguard/*; do
+  if [ -f "$file" ]; then
+    sed -i "/\[Peer\]/i PostUp = ip -4 rule add from ${IPv4_addr} lookup main prio 18" "$file"
+    sed -i "/\[Peer\]/i PostDown = ip -4 rule delete from ${IPv4_addr} lookup main prio 18" "$file"
+    sed -i "/\[Peer\]/i PostUp = ip -6 rule add from ${IPv6_addr} lookup main prio 18" "$file"
+    sed -i "/\[Peer\]/i PostDown = ip -6 rule delete from ${IPv6_addr} lookup main prio 18" "$file"
+  fi
+done
