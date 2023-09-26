@@ -58,7 +58,7 @@ stage_v2ray() {
   echo [+] Installing V2ray geoip
   curl -s -L -o /v2ray/geoip.dat "https://github.com/v2fly/geoip/raw/release/geoip.dat"
 }
-[ ! -f /v2ray/v2ray] && stage_v2ray
+[ ! -f /v2ray/v2ray ] && stage_v2ray
 
 echo [+] Configuring V2ray
 cat > /v2ray/server.json <<EOF
