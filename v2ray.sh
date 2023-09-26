@@ -32,6 +32,7 @@ read -p "[?] Confirm (Y) " confirm
 [ ! "${confirm,,}" = "y" ] && exit
 
 echo [+] UFW
+ufw allow ssh
 ufw allow in http
 ufw allow in https
 ufw allow in ${PORT}
