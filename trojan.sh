@@ -1,3 +1,7 @@
+read -p '[?] Domain: ' DOMAIN
+read -p '[?] UUID if you have one: ' UUID
+if [ -z $UUID ]; then UUID=`uuidgen`; fi
+
 apt update
 apt upgrade -y
 apt install -y trojan
@@ -7,10 +11,6 @@ apt install -y nginx
 echo [+] Setup firewall
 ufw allow in http
 ufw allow in https
-
-read -p '[?] Domain: ' DOMAIN
-read -p '[?] UUID if you have one: ' UUID
-if [ -z $UUID ]; then UUID=`uuidgen`; fi
 
 # Nginx
 echo [+] Prepare Nginx homepage
