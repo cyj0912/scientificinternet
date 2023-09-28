@@ -4,25 +4,31 @@ apt install -y trojan
 snap install --classic certbot
 apt install -y nginx
 
+echo [+] Setup firewall
 ufw allow in http
 ufw allow in https
 
-read -p 'Domain: ' DOMAIN
-UUID=`uuidgen`
+read -p '[?] Domain: ' DOMAIN
+read -p '[?] UUID if you have one: ' UUID
+if [ -z $UUID ]; then UUID=`uuidgen`; fi
 
 # Nginx
+echo [+] Prepare Nginx homepage
 curl -sLf 'https://microsoft.com' > /var/www/html/index.html
 
 # Certbot
+echo [+] Fetching certificate for $DOMAIN
 systemctl stop nginx
 certbot certonly --agree-tos --standalone --register-unsafely-without-email -d ${DOMAIN}
 systemctl start nginx
 
 # Install certificates for Trojan
+echo [+] Installing certificate for $DOMAIN to trojan dir
 install -m 600 -o nobody -g nogroup /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /etc/trojan/fullchain.pem
 install -m 600 -o nobody -g nogroup /etc/letsencrypt/live/${DOMAIN}/privkey.pem /etc/trojan/privkey.pem
 
 # Trojan
+echo [+] Configuring trojan
 tee /etc/trojan/config.json <<EOF
 {
     "run_type": "server",
