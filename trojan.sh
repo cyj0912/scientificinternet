@@ -40,6 +40,7 @@ tee /etc/trojan/config.json <<EOF
     }
 }
 EOF
+systemctl enable trojan.service
 systemctl restart trojan.service
 
 echo Run the following to setup Cloudflare WARP
