@@ -17,10 +17,10 @@ apt install software-properties-common -y
 if [[ $UBUNTU_VERSION == "18.04" ]]; then
     add-apt-repository ppa:wireguard/wireguard -y
     apt update
+    apt install wireguard-dkms wireguard-tools linux-headers-$(uname -r) iptables-persistent -y
+else
+    apt install wireguard-tools iptables-persistent -y
 fi
-
-# Install WireGuard tools, Linux headers, and iptables-persistent
-apt install wireguard-dkms wireguard-tools linux-headers-$(uname -r) iptables-persistent -y
 
 # Configure WireGuard
 umask 077
