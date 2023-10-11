@@ -22,6 +22,8 @@ else
     apt install wireguard-tools iptables-persistent -y
 fi
 
+ufw allow 51820/udp
+
 # Configure WireGuard
 umask 077
 cd /etc/wireguard
