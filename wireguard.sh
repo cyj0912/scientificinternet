@@ -1,16 +1,27 @@
 #!/bin/bash
 
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
 # Update and upgrade system
+echo -e "${YELLOW}Updating and upgrading system...${NC}"
 sudo apt update && sudo apt upgrade -y
 
 # Install wireguard
+echo -e "${YELLOW}Installing WireGuard tools...${NC}"
 sudo apt install -y wireguard-tools
 
 # Generate private and public key for wireguard
+echo -e "${YELLOW}Generating keys for WireGuard...${NC}"
 PRIVATE_KEY=$(wg genkey)
 PUBLIC_KEY=$(echo "$PRIVATE_KEY" | wg pubkey)
 
 # Generate client keys
+echo -e "${YELLOW}Generating client keys...${NC}"
 CLIENT_PRIVATE_KEY=$(wg genkey)
 CLIENT_PUBLIC_KEY=$(echo "$CLIENT_PRIVATE_KEY" | wg pubkey)
 
@@ -27,14 +38,17 @@ else
 fi
 
 # Enable IP forwarding
+echo -e "${YELLOW}Enabling IP forwarding...${NC}"
 sudo sh -c 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf'
 sudo sh -c 'echo "net.ipv6.conf.all.forwarding = 1" >> /etc/sysctl.conf'
 sudo sysctl -p
 
 # Allow WireGuard port in UFW
+echo -e "${YELLOW}Allowing WireGuard port in UFW...${NC}"
 sudo ufw allow 16383/udp
 
 # Write the wg0.conf file
+echo -e "${YELLOW}Writing wg0.conf...${NC}"
 cat > /etc/wireguard/wg0.conf <<EOF
 [Interface]
 PrivateKey = $PRIVATE_KEY
@@ -53,11 +67,12 @@ AllowedIPs = 10.8.0.2/32, ${ULA_PREFIX}::2/64
 EOF
 
 # Start and enable WireGuard
+echo -e "${YELLOW}Starting and enabling WireGuard...${NC}"
 systemctl start wg-quick@wg0
 systemctl enable wg-quick@wg0
 
 # Echo client config
-echo "Client Configuration:"
+echo -e "${GREEN}Client Configuration:${NC}"
 echo "----------------------"
 cat <<EOF
 
