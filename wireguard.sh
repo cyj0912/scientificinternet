@@ -20,7 +20,11 @@ CLIENT_PUBLIC_KEY=$(echo "$CLIENT_PRIVATE_KEY" | wg pubkey)
 ULA_PREFIX=$(printf "fd%x:%x:%x" "$(($RANDOM/256))" "$RANDOM" "$RANDOM")
 
 # Detect default gateway interface name
-MAIN_INTERFACE=$(ip route | grep default | awk '{print $5}' | head -n 1)
+if ip link show | grep -q "wgcf"; then
+    MAIN_INTERFACE="wgcf"
+else
+    MAIN_INTERFACE=$(ip route | grep default | awk '{print $5}' | head -n 1)
+fi
 
 # Enable IP forwarding
 sudo sh -c 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf'
